@@ -80,7 +80,7 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
             header = k,
             txt = text,
             params = {
-                event = 'rsg-cooking:cookmeal',
+                event = 'rsg-cooking:client:checkingredients',
                 args = {
 					name = v.name,
                     item = k,
@@ -102,31 +102,34 @@ end)
 
 ------------------------------------------------------------------------------------------------------
 
--- do cooking
-RegisterNetEvent('rsg-cooking:cookmeal', function(data)
-	local cookitem = Config.Recipes[data.item].ingredients
-	local output = Config.Recipes[data.item].receive
-	for k, v in pairs(cookitem, output) do
+-- check player has the ingredients to cook item
+RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
+	QRCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
+    if (hasRequired) then
 		if Config.Debug == true then
-			print(data.name)
-			print(v.item)
-			print(v.amount)
-			print(data.receive)
+			print("passed")
 		end
-		local hasItem = QRCore.Functions.HasItem(v.item, v.amount)
-		if hasItem then
-			QRCore.Functions.Progressbar('cook-'..data.receive, 'Cooking a '..data.name, data.cooktime, false, true, {
-				disableMovement = true,
-				disableCarMovement = false,
-				disableMouse = false,
-				disableCombat = true,
-			}, {}, {}, {}, function() -- Done
-				TriggerServerEvent('rsg-cooking:server:finishcooking', v.item, v.amount, data.receive)
-			end)
-		else
-			QRCore.Functions.Notify('You don\'t have the required items!', 'error')
+		TriggerEvent('rsg-cooking:cookmeal', data.name, data.item, tonumber(data.cooktime), data.receive)
+	else
+		if Config.Debug == true then
+			print("failed")
 		end
+		return
 	end
+	end, Config.Recipes[data.item].ingredients)
+end)
+
+-- do cooking
+RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive)
+	local ingredients = Config.Recipes[item].ingredients
+	QRCore.Functions.Progressbar('cook-meal', 'Cooking a '..name, cooktime, false, true, {
+		disableMovement = true,
+		disableCarMovement = false,
+		disableMouse = false,
+		disableCombat = true,
+	}, {}, {}, {}, function() -- Done
+		TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive)
+	end)
 end)
 
 ------------------------------------------------------------------------------------------------------

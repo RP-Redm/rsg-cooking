@@ -1,8 +1,7 @@
 Config = {}
 
-Config.Debug = false -- enable for debug
+Config.Debug = false
 
--- campfire props
 Config.CampfireProps = {
 	'p_campfire05x',
 	'p_campfirecombined01x',
@@ -14,7 +13,6 @@ Config.CampfireProps = {
 	'p_stove07x',
 }
 
--- add your recipes here
 Config.Recipes = {
 
     ["Fish Steak"] = {
