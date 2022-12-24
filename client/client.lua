@@ -1,4 +1,4 @@
-local QRCore = exports['qr-core']:GetCoreObject()
+local RSGCore = exports['rsg-core']:GetCoreObject()
 local campfire = false
 
 ------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ AddEventHandler('rsg-cooking:client:setupcampfire', function()
         DeleteObject(fire)
         SetEntityAsMissionEntity(cookgrill)
         DeleteObject(cookgrill)
-		QRCore.Functions.Notify('campfire put out', 'primary')
+		RSGCore.Functions.Notify('campfire put out', 'primary')
 		campfire = false
     elseif campfire == false then
 		CrouchAnim()
@@ -30,7 +30,7 @@ AddEventHandler('rsg-cooking:client:setupcampfire', function()
 		PlaceObjectOnGroundProperly(prop2)
 		fire = prop
 		cookgrill = prop2
-		QRCore.Functions.Notify('campfire deployed', 'primary')
+		RSGCore.Functions.Notify('campfire deployed', 'primary')
 		campfire = true
 	end
 end, false)
@@ -47,7 +47,7 @@ Citizen.CreateThread(function()
 				if #(pos - objectPos) < 3.0 then
 					awayFromObject = false
 					DrawText3Ds(objectPos.x, objectPos.y, objectPos.z + 1.0, "Cook Menu [J]")
-					if IsControlJustReleased(0, QRCore.Shared.Keybinds['J']) then
+					if IsControlJustReleased(0, RSGCore.Shared.Keybinds['J']) then
 						TriggerEvent('rsg-cooking:client:cookmenu')
 					end
 				end
@@ -74,7 +74,7 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
         local item = {}
         local text = ""
         for k, v in pairs(v.ingredients) do
-            text = text .. "- " .. QRCore.Shared.Items[v.item].label .. ": " .. v.amount .. "x <br>"
+            text = text .. "- " .. RSGCore.Shared.Items[v.item].label .. ": " .. v.amount .. "x <br>"
         end
         cookMenu[#cookMenu + 1] = {
             header = k,
@@ -94,17 +94,17 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
         header = "❌ | Close Menu",
         txt = '',
         params = {
-            event = 'qr-menu:closeMenu',
+            event = 'rsg-menu:closeMenu',
         }
     }
-    exports['qr-menu']:openMenu(cookMenu)
+    exports['rsg-menu']:openMenu(cookMenu)
 end)
 
 ------------------------------------------------------------------------------------------------------
 
 -- check player has the ingredients to cook item
 RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
-	QRCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
+	RSGCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
     if (hasRequired) then
 		if Config.Debug == true then
 			print("passed")
@@ -122,7 +122,7 @@ end)
 -- do cooking
 RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive)
 	local ingredients = Config.Recipes[item].ingredients
-	QRCore.Functions.Progressbar('cook-meal', 'Cooking a '..name, cooktime, false, true, {
+	RSGCore.Functions.Progressbar('cook-meal', 'Cooking a '..name, cooktime, false, true, {
 		disableMovement = true,
 		disableCarMovement = false,
 		disableMouse = false,
