@@ -6,15 +6,15 @@ author 'RexShack#3041'
 description 'rsg-cooking'
 
 client_script {
-	'client/client.lua'
+    'client/client.lua'
 }
 
 server_script {
-	'server/server.lua'
+    'server/server.lua'
 }
 
 shared_script {
-	'config.lua'
+    'config.lua'
 }
 
 dependency 'rsg-core'
