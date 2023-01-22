@@ -11,7 +11,7 @@ exports['rsg-target']:AddTargetModel(Config.CampfireProps, {
             type = "client",
             event = 'rsg-cooking:client:cookmenu',
             icon = "far fa-eye",
-            label = "Open Cooking Menu",
+            label = Lang:t('label.open_cooking_menu'),
             distance = 3.0
         }
     }
@@ -31,7 +31,7 @@ AddEventHandler('rsg-cooking:client:setupcampfire', function()
         DeleteObject(fire)
         SetEntityAsMissionEntity(cookgrill)
         DeleteObject(cookgrill)
-        RSGCore.Functions.Notify('campfire put out', 'primary')
+        RSGCore.Functions.Notify(Lang:t('primary.campfire_put_out'), 'primary')
         campfire = false
     elseif campfire == false then
         TaskStartScenarioInPlace(ped, GetHashKey('WORLD_HUMAN_CROUCH_INSPECT'), -1, true, false, false, false)
@@ -46,7 +46,7 @@ AddEventHandler('rsg-cooking:client:setupcampfire', function()
         PlaceObjectOnGroundProperly(prop2)
         fire = prop
         cookgrill = prop2
-        RSGCore.Functions.Notify('campfire deployed', 'primary')
+        RSGCore.Functions.Notify(Lang:t('primary.campfire_deployed'), 'primary')
         campfire = true
     end
 end, false)
@@ -58,7 +58,7 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
     cookMenu = {}
     cookMenu = {
         {
-            header = "🥩 | Cooking Menu",
+            header = Lang:t('menu.cooking_menu'),
             isMenuHeader = true,
         },
     }
@@ -83,7 +83,7 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
         }
     end
     cookMenu[#cookMenu + 1] = {
-        header = "❌ | Close Menu",
+        header = Lang:t('menu.close_menu'),
         txt = '',
         params = {
             event = 'rsg-menu:closeMenu',
@@ -114,7 +114,7 @@ end)
 -- do cooking
 RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive)
     local ingredients = Config.Recipes[item].ingredients
-    RSGCore.Functions.Progressbar('cook-meal', 'Cooking a '..name, cooktime, false, true, {
+    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..name, cooktime, false, true, {
         disableMovement = true,
         disableCarMovement = false,
         disableMouse = false,

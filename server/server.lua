@@ -1,7 +1,7 @@
 local RSGCore = exports['rsg-core']:GetCoreObject()
 
 -- use campfire command
-RSGCore.Commands.Add("campfire", 'deploy a campfire', {}, false, function(source)
+RSGCore.Commands.Add("campfire", Lang:t('commands.deploy_campfire'), {}, false, function(source)
     local src = source
     TriggerClientEvent('rsg-cooking:client:setupcampfire', src)
 end)
@@ -25,7 +25,7 @@ RSGCore.Functions.CreateCallback('rsg-cooking:server:checkingredients', function
                 cb(true)
             end
         else
-            TriggerClientEvent('RSGCore:Notify', src, 'You don\'t have the required items!', 'error')
+            TriggerClientEvent('RSGCore:Notify', src, Lang:t('error.you_dont_have_the_required_items'), 'error')
             cb(false)
             return
         end
@@ -49,5 +49,5 @@ AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receiv
     -- add cooked item
     Player.Functions.AddItem(receive, 1)
     TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[receive], "add")
-    TriggerClientEvent('RSGCore:Notify', src, 'cooking finished', 'success')
+    TriggerClientEvent('RSGCore:Notify', src, Lang:t('success.cooking_finished'), 'success')
 end)
