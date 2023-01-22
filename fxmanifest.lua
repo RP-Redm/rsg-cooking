@@ -8,7 +8,7 @@ description 'rsg-cooking'
 shared_scripts {
     '@rsg-core/shared/locale.lua',
     'locales/en.lua',
-	'locales/*.lua',
+    'locales/*.lua',
     'config.lua',
 }
 
