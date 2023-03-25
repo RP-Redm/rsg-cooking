@@ -34,7 +34,7 @@ end)
 
 -- finish cooking
 RegisterServerEvent('rsg-cooking:server:finishcooking')
-AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receive)
+AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receive, giveamount)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     -- remove ingredients
@@ -47,7 +47,7 @@ AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receiv
         TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[v.item], "remove")
     end
     -- add cooked item
-    Player.Functions.AddItem(receive, 1)
+    Player.Functions.AddItem(receive, giveamount)
     TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[receive], "add")
     TriggerClientEvent('RSGCore:Notify', src, Lang:t('success.cooking_finished'), 'success')
 end)

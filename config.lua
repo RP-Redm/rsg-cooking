@@ -31,7 +31,8 @@ Config.Recipes = {
         ingredients = {
             [1] = { item = "raw_fish", amount = 1 },
         },
-        receive = "cooked_fish"
+        receive = "cooked_fish",
+        giveamount = 1
     },
 
     ["Meat Steak"] = {
@@ -40,7 +41,8 @@ Config.Recipes = {
         ingredients = {
             [1] = { item = "raw_meat", amount = 1 },
         },
-        receive = "cooked_meat"
+        receive = "cooked_meat",
+        giveamount = 1
     },
     
 }

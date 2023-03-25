@@ -77,7 +77,8 @@ RegisterNetEvent('rsg-cooking:client:cookmenu', function()
                     name = v.name,
                     item = k,
                     cooktime = v.cooktime,
-                    receive = v.receive
+                    receive = v.receive,
+                    giveamount = v.giveamount
                 }
             }
         }
@@ -101,7 +102,7 @@ RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
         if Config.Debug == true then
             print("passed")
         end
-        TriggerEvent('rsg-cooking:cookmeal', data.name, data.item, tonumber(data.cooktime), data.receive)
+        TriggerEvent('rsg-cooking:cookmeal', data.name, data.item, tonumber(data.cooktime), data.receive, data.giveamount)
     else
         if Config.Debug == true then
             print("failed")
@@ -112,7 +113,7 @@ RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
 end)
 
 -- do cooking
-RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive)
+RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive, giveamount)
     local ingredients = Config.Recipes[item].ingredients
     RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..name, cooktime, false, true, {
         disableMovement = true,
@@ -120,7 +121,7 @@ RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive)
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive)
+        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive, giveamount)
     end)
 end)
 
