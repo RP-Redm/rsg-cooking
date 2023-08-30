@@ -2,6 +2,7 @@ local RSGCore = exports['rsg-core']:GetCoreObject()
 local campfire = false
 local fire
 local cookgrill
+local options = {}
 
 ------------------------------------------------------------------------------------------------------
 
@@ -53,44 +54,29 @@ end, false)
 
 ------------------------------------------------------------------------------------------------------
 
--- cook menu
+for _, v in ipairs(Config.Recipes) do
+    table.insert(options, {
+        title = v.title,
+        description = v.description,
+        icon = 'fa-solid fa-kitchen-set',
+        event = 'rsg-cooking:client:checkingredients',
+        args = {
+            title = v.title,
+            ingredients = v.ingredients,
+            cooktime = v.cooktime,
+            receive = v.receive,
+            giveamount = v.giveamount
+        }
+    })
+end
+
 RegisterNetEvent('rsg-cooking:client:cookmenu', function()
-    cookMenu = {}
-    cookMenu = {
-        {
-            header = Lang:t('menu.cooking_menu'),
-            isMenuHeader = true,
-        },
-    }
-    for k, v in pairs(Config.Recipes) do
-        local item = {}
-        local text = ""
-        for k, v in pairs(v.ingredients) do
-            text = text .. "- " .. RSGCore.Shared.Items[v.item].label .. ": " .. v.amount .. "x <br>"
-        end
-        cookMenu[#cookMenu + 1] = {
-            header = k,
-            txt = text,
-            params = {
-                event = 'rsg-cooking:client:checkingredients',
-                args = {
-                    name = v.name,
-                    item = k,
-                    cooktime = v.cooktime,
-                    receive = v.receive,
-                    giveamount = v.giveamount
-                }
-            }
-        }
-    end
-    cookMenu[#cookMenu + 1] = {
-        header = Lang:t('menu.close_menu'),
-        txt = '',
-        params = {
-            event = 'rsg-menu:closeMenu',
-        }
-    }
-    exports['rsg-menu']:openMenu(cookMenu)
+    lib.registerContext({
+        id = 'cooking_menu',
+        title = 'Cooking Menu',
+        options = options
+    })
+    lib.showContext('cooking_menu')
 end)
 
 ------------------------------------------------------------------------------------------------------
@@ -102,20 +88,19 @@ RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
         if Config.Debug == true then
             print("passed")
         end
-        TriggerEvent('rsg-cooking:cookmeal', data.name, data.item, tonumber(data.cooktime), data.receive, data.giveamount)
+        TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime), data.receive, data.giveamount)
     else
         if Config.Debug == true then
             print("failed")
         end
         return
     end
-    end, Config.Recipes[data.item].ingredients)
+    end, data.ingredients)
 end)
 
 -- do cooking
-RegisterNetEvent('rsg-cooking:cookmeal', function(name, item, cooktime, receive, giveamount)
-    local ingredients = Config.Recipes[item].ingredients
-    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..name, cooktime, false, true, {
+RegisterNetEvent('rsg-cooking:cookmeal', function(title, ingredients, cooktime, receive, giveamount)
+    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..title, cooktime, false, true, {
         disableMovement = true,
         disableCarMovement = false,
         disableMouse = false,

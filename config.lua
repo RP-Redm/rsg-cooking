@@ -25,20 +25,21 @@ Config.CampfireProps = {
 
 Config.Recipes = {
 
-    ["Fish Steak"] = {
-        name =  Lang:t('menu.fish_steak'),
+    {
+        title =  Lang:t('menu.fish_steak'),
+        description = '1 x Raw Fish',
         cooktime = 5000,
-        ingredients = {
+        ingredients = { 
             [1] = { item = "raw_fish", amount = 1 },
         },
         receive = "cooked_fish",
         giveamount = 1
     },
-
-    ["Meat Steak"] = {
-        name = Lang:t('menu.meat_steak'),
+    {
+        title = Lang:t('menu.meat_steak'),
+        description = '1 x Raw Meat',
         cooktime = 5000,
-        ingredients = {
+        ingredients = { 
             [1] = { item = "raw_meat", amount = 1 },
         },
         receive = "cooked_meat",
