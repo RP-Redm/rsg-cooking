@@ -78,6 +78,8 @@ for _, v in ipairs(Config.Recipes) do
         categoryMenus[v.category] = {
             id = 'cooking_menu_' .. v.category,
             title = 'Cooking Menu - ' .. v.category,
+            menu = 'cooking_main_menu',
+            onBack = function() end,
             options = { option }
         }
     else
