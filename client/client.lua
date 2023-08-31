@@ -54,8 +54,12 @@ end, false)
 
 ------------------------------------------------------------------------------------------------------
 
+-- create a table to store menu options by category
+local categoryMenus = {}
+
+-- iterate through recipes and organize them by category
 for _, v in ipairs(Config.Recipes) do
-    table.insert(options, {
+    local option = {
         title = v.title,
         description = v.description,
         icon = 'fa-solid fa-kitchen-set',
@@ -67,16 +71,50 @@ for _, v in ipairs(Config.Recipes) do
             receive = v.receive,
             giveamount = v.giveamount
         }
-    })
+    }
+
+    -- check if a menu already exists for this category
+    if not categoryMenus[v.category] then
+        categoryMenus[v.category] = {
+            id = 'cooking_menu_' .. v.category,
+            title = 'Cooking Menu - ' .. v.category,
+            options = { option }
+        }
+    else
+        table.insert(categoryMenus[v.category].options, option)
+    end
 end
 
-RegisterNetEvent('rsg-cooking:client:cookmenu', function()
-    lib.registerContext({
-        id = 'cooking_menu',
-        title = 'Cooking Menu',
-        options = options
-    })
-    lib.showContext('cooking_menu')
+-- log menu events by category
+for category, menuData in pairs(categoryMenus) do
+    RegisterNetEvent('rsg-cooking:client:' .. category)
+    AddEventHandler('rsg-cooking:client:' .. category, function()
+        lib.registerContext(menuData)
+        lib.showContext(menuData.id)
+    end)
+end
+
+-- main event to open main menu
+RegisterNetEvent('rsg-cooking:client:cookmenu')
+AddEventHandler('rsg-cooking:client:cookmenu', function()
+    -- show main menu with categories
+    local mainMenu = {
+        id = 'cooking_main_menu',
+        title = 'Cooking Main Menu',
+        options = {}
+    }
+
+    for category, menuData in pairs(categoryMenus) do
+        table.insert(mainMenu.options, {
+            title = category,
+            description = 'Explore the recipes for ' .. category,
+            icon = 'fa-solid fa-kitchen-set',
+            event = 'rsg-cooking:client:' .. category
+        })
+    end
+
+    lib.registerContext(mainMenu)
+    lib.showContext(mainMenu.id)
 end)
 
 ------------------------------------------------------------------------------------------------------
