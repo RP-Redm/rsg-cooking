@@ -110,7 +110,7 @@ AddEventHandler('rsg-cooking:client:cookmenu', function()
             description = 'Explore the recipes for ' .. category,
             icon = 'fa-solid fa-kitchen-set',
             event = 'rsg-cooking:client:' .. category,
-            arrow: true
+            arrow = true
         })
     end
 
