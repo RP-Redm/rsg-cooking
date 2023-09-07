@@ -66,7 +66,6 @@ for _, v in ipairs(Config.Recipes) do
     end
     local option = {
         title = v.title,
-        description = v.description,
         icon = 'fa-solid fa-kitchen-set',
         event = 'rsg-cooking:client:checkingredients',
 		metadata = ingredientsMetadata,
