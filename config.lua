@@ -27,7 +27,6 @@ Config.Recipes = {
 
     {
         title =  Lang:t('menu.fish_steak'),
-        description = '1 x Raw Fish',
         category = "fish",
         cooktime = 5000,
         ingredients = { 
@@ -38,7 +37,6 @@ Config.Recipes = {
     },
     {
         title = Lang:t('menu.meat_steak'),
-        description = '1 x Raw Meat',
         category = "meat",
         cooktime = 5000,
         ingredients = { 

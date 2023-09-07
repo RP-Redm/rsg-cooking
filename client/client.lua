@@ -59,11 +59,16 @@ local categoryMenus = {}
 
 -- iterate through recipes and organize them by category
 for _, v in ipairs(Config.Recipes) do
+    local ingredientsMetadata = {}
+
+    for i, ingredient in ipairs(v.ingredients) do
+        table.insert(ingredientsMetadata, { label = RSGCore.Shared.Items[ingredient.item].label, value = ingredient.amount })
+    end
     local option = {
         title = v.title,
-        description = v.description,
         icon = 'fa-solid fa-kitchen-set',
         event = 'rsg-cooking:client:checkingredients',
+		metadata = ingredientsMetadata,
         args = {
             title = v.title,
             ingredients = v.ingredients,
