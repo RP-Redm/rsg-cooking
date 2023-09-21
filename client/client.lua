@@ -135,32 +135,32 @@ RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
 
     if not input then return end
 
-    local cookjumlah = tonumber(input[1])
-    if cookjumlah then
+    local cookamount = tonumber(input[1])
+    if cookamount then
     RSGCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
     if (hasRequired) then
         if Config.Debug == true then
             print("passed")
         end
-        TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime * cookjumlah), data.receive, data.giveamount,  cookjumlah)
+        TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime * cookamount), data.receive, data.giveamount,  cookamount)
     else
         if Config.Debug == true then
             print("failed")
         end
         return
     end
-    end, data.ingredients,  cookjumlah)
+    end, data.ingredients,  cookamount)
 end)
 
 -- do cooking
-RegisterNetEvent('rsg-cooking:cookmeal', function(title, ingredients, cooktime, receive, giveamount,  cookjumlah)
-    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..cookjumlah..' '..title, cooktime, false, true, {
+RegisterNetEvent('rsg-cooking:cookmeal', function(title, ingredients, cooktime, receive, giveamount,  cookamount)
+    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..cookamount..' '..title, cooktime, false, true, {
         disableMovement = true,
         disableCarMovement = false,
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive, giveamount,  cookjumlah)
+        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive, giveamount,  cookamount)
     end)
 end)
 
