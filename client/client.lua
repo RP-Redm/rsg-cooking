@@ -129,30 +129,38 @@ end)
 
 -- check player has the ingredients to cook item
 RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
+ local input = lib.inputDialog('Cooking Amount', {
+        { type = 'input', label = 'Amount', required = true, min = 1, max = 10 },
+    })
+
+    if not input then return end
+
+    local cookjumlah = tonumber(input[1])
+    if cookjumlah then
     RSGCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
     if (hasRequired) then
         if Config.Debug == true then
             print("passed")
         end
-        TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime), data.receive, data.giveamount)
+        TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime * cookjumlah), data.receive, data.giveamount,  cookjumlah)
     else
         if Config.Debug == true then
             print("failed")
         end
         return
     end
-    end, data.ingredients)
+    end, data.ingredients,  cookjumlah)
 end)
 
 -- do cooking
-RegisterNetEvent('rsg-cooking:cookmeal', function(title, ingredients, cooktime, receive, giveamount)
-    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..title, cooktime, false, true, {
+RegisterNetEvent('rsg-cooking:cookmeal', function(title, ingredients, cooktime, receive, giveamount,  cookjumlah)
+    RSGCore.Functions.Progressbar('cook-meal', Lang:t('progressbar.cooking_a')..cookjumlah..' '..title, cooktime, false, true, {
         disableMovement = true,
         disableCarMovement = false,
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive, giveamount)
+        TriggerServerEvent('rsg-cooking:server:finishcooking', ingredients, receive, giveamount,  cookjumlah)
     end)
 end)
 
