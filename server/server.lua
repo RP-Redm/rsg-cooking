@@ -13,19 +13,19 @@ RSGCore.Functions.CreateUseableItem("campfire", function(source, item)
 end)
 
 -- check player has the ingredients
-RSGCore.Functions.CreateCallback('rsg-cooking:server:checkingredients', function(source, cb, ingredients)
+RSGCore.Functions.CreateCallback('rsg-cooking:server:checkingredients', function(source, cb, ingredients, cookjumlah)
     local src = source
     local hasItems = false
     local icheck = 0
     local Player = RSGCore.Functions.GetPlayer(src)
     for k, v in pairs(ingredients) do
-        if Player.Functions.GetItemByName(v.item) and Player.Functions.GetItemByName(v.item).amount >= v.amount then
+        if Player.Functions.GetItemByName(v.item) and Player.Functions.GetItemByName(v.item).amount >= v.amount * cookjumlah then
             icheck = icheck + 1
             if icheck == #ingredients then
                 cb(true)
             end
         else
-            TriggerClientEvent('RSGCore:Notify', src, Lang:t('error.you_dont_have_the_required_items'), 'error')
+            TriggerClientEvent('RSGCore:Notify', src, Lang:t('error.you_dont_have_the_required_items').. v.item, 'error')
             cb(false)
             return
         end
@@ -34,7 +34,7 @@ end)
 
 -- finish cooking
 RegisterServerEvent('rsg-cooking:server:finishcooking')
-AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receive, giveamount)
+AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receive, giveamount, cookjumlah)
     local src = source
     local Player = RSGCore.Functions.GetPlayer(src)
     -- remove ingredients
@@ -43,11 +43,14 @@ AddEventHandler('rsg-cooking:server:finishcooking', function(ingredients, receiv
             print(v.item)
             print(v.amount)
         end
-        Player.Functions.RemoveItem(v.item, v.amount)
+        local requiredAmount = v.amount * cookjumlah
+        Player.Functions.RemoveItem(v.item, requiredAmount)    
         TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[v.item], "remove")
     end
     -- add cooked item
-    Player.Functions.AddItem(receive, giveamount)
+    Player.Functions.AddItem(receive, giveamount * cookjumlah)
     TriggerClientEvent('inventory:client:ItemBox', src, RSGCore.Shared.Items[receive], "add")
+    local labelReceive = RSGCore.Shared.Items[receive].label
+    TriggerClientEvent('RSGCore:Notify', src, Lang:t('success.cooking_successful')..' '..cookjumlah..' ' .. labelReceive, 'success')
     TriggerClientEvent('RSGCore:Notify', src, Lang:t('success.cooking_finished'), 'success')
 end)
