@@ -3,6 +3,7 @@ local Translations = {
       you_dont_have_the_required_items = "You don\'t have the required items!",
     },
     success = {
+      cooking_successful = 'cooking ',
       cooking_finished = 'cooking finished',
     },
     primary = {
