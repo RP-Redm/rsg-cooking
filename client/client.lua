@@ -68,7 +68,7 @@ for _, v in ipairs(Config.Recipes) do
         title = v.title,
         icon = 'fa-solid fa-kitchen-set',
         event = 'rsg-cooking:client:checkingredients',
-		metadata = ingredientsMetadata,
+        metadata = ingredientsMetadata,
         args = {
             title = v.title,
             ingredients = v.ingredients,
@@ -129,33 +129,33 @@ end)
 
 -- check player has the ingredients to cook item
 RegisterNetEvent('rsg-cooking:client:checkingredients', function(data)
-	local input = lib.inputDialog('Cooking Amount', {
+    local input = lib.inputDialog('Cooking Amount', {
         { 
-			type = 'input',
-			label = 'Amount',
-			required = true,
-			min = 1, max = 10 
-		},
+            type = 'input',
+            label = 'Amount',
+            required = true,
+            min = 1, max = 10 
+        },
     })
 
     if not input then return end
 
     local cookamount = tonumber(input[1])
     if cookamount then
-		RSGCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
-			if (hasRequired) then
-				if Config.Debug == true then
-					print("passed")
-				end
-				TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime * cookamount), data.receive, data.giveamount,  cookamount)
-			else
-				if Config.Debug == true then
-					print("failed")
-				end
-				return
-			end
-		end, data.ingredients,  cookamount)
-	end
+        RSGCore.Functions.TriggerCallback('rsg-cooking:server:checkingredients', function(hasRequired)
+            if (hasRequired) then
+                if Config.Debug == true then
+                    print("passed")
+                end
+                TriggerEvent('rsg-cooking:cookmeal', data.title, data.ingredients, tonumber(data.cooktime * cookamount), data.receive, data.giveamount,  cookamount)
+            else
+                if Config.Debug == true then
+                    print("failed")
+                end
+                return
+            end
+        end, data.ingredients,  cookamount)
+    end
 end)
 
 -- do cooking
